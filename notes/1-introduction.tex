@@ -3,164 +3,61 @@
 \usepackage{biblatex}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{marginnote}
+
 \addbibresource{bib.bib}
 \setlength{\parindent}{0em}
 \bibliography{bib}
 
 
-\title{Transformadas de Fourier}
-\author{Sara Martins Bonito}
-\date{Dezembro de 2019}
+\title{Introduction}
+\author{Zahin Mohammad}
+\date{May 2020}
 \linespread{1.5}
 \begin{document}
 
 \maketitle
 
-\section{Introdução}
+\section{Probabilistic modelling}
 
-No seminário do Professor Jorge Drumond Silva\cite{drumond} foram expostas diferentes tipos de equações de onda e dispersão, usadas para modelar os mais diversos fenómenos físicos. Em particular, foi discutida a equação do calor, a qual motiva as séries de Fourier.
+    Simplest model 
+    \begin{equation}
+        y = \beta^Tx,
+    \end{equation}
+    where $\beta$ are the parameters, and $x$ is a series of factors that affect output $y$. Can think of $x$ as all the factors that affect the price of a house defined by $y$. This is not ideal because real world has no guarantees.
+    \setlength{\parskip}{6pt}
+    More useful to know the probability that the price of the house, $y$, is some value given factors of $x$
+    \begin{equation}
+        P(x,y)
+    \end{equation}
+\section{The difficulties of probabilistic modelling}
+    Probabilities are inherently exponentially-sized objects; the only way in which we can manipulate them is by making simplifying assumptions about their structure.
+    \setlength{\parskip}{6pt}
 
-Neste trabalho irei fazer a passagem das séries de Fourier estudadas em Análise Complexa e Equações Diferenciais para a transformada de Fourier.
-
-Nas secções seguintes, sempre que for admitida uma função \(f\), esta será integrável em módulo, isto é, \(f\in L^1 \).
-
-\section{Série de Fourier}
-Começamos por definir a série de Fourier. Seja \(f:\mathbb{R}\rightarrow\mathbb{R}\) uma função periódica de período \(2L\), integrável em valor absoluto. A série de Fourier de \(f\) é dada por:
-\[f(x)\sim\frac{1}{2}a_0+ \displaystyle\sum_{n=1}^{\infty}(a_n\cos{(\frac{nx\pi}{L})}+b_n\sin{(\frac{nx\pi}{L})})\]
-Onde \(a_n\) e \(b_n\) para \(\forall n \in \mathbb{N}\) são dados por:
-\[a_n=\frac{1}{L}\displaystyle\int_{-L}^{L}f(x)\cos{(\frac{nx\pi}{L})}\quad dx\]
-e
-\[b_n=\frac{1}{L}\displaystyle\int_{-L}^{L}f(x)\sin{(\frac{nx\pi}{L})}\quad dx\]
-Calcula-se \(a_0\) fazendo:
-\[a_0=\frac{1}{L}\displaystyle\int_{-L}^{L}f(x)\quad dx\]
-\section{Forma Complexa da Série de Fourier}
-Sabemos da fórmula de Euler que
-\[e^{i\theta}=\cos{\theta}+i\sin{\theta}\]
-Como consequência, temos
-\[\cos{\theta}=\frac{e^{i\theta}+e^{-i\theta}}{2}\quad{,}\quad \sin{\theta}=\frac{e^{i\theta}-e^{-i\theta}}{2i}\]
-Utilizando estas identidades, podemos reescrever a série de Fourier e os integrais que definem os termos da série\cite{djairo}. Os novos termos serão os \(c_n\) obtidos abaixo.
-Para \(n\geq0\):
-\[c_n=\frac{a_n}{2}-i\frac{b_n}{2}\quad{=}\quad\frac{1}{2L}\displaystyle\int_{-L}^{L}f(x)[\cos{(-\frac{nx\pi}{L})}+i\sin{(-\frac{nx\pi}{L})}]\quad dx\]
-Para \(n<0\):
-\[c_n=\frac{a_n}{2}+i\frac{b_n}{2}\quad{=}\quad\frac{1}{2L}\displaystyle\int_{-L}^{L}f(x)[\cos{(-\frac{nx\pi}{L})}+i\sin{(-\frac{nx\pi}{L})}]\quad dx\]
-Como
-\[\cos{(-\frac{nx\pi}{L})}+i\sin{(-\frac{nx\pi}{L})}\quad{=}\quad e^{-i\frac{nx\pi}{L}}\]
-Definimos uma única fórmula para os \(c_n\) com \(n\in\mathbb{Z}\), isto é:
-\[c_n=\frac{1}{2L}\displaystyle\int_{-L}^{L}f(x)e^{-i\frac{nx\pi}{L}} \quad dx\]
-A série de Fourier é agora
-\[f\sim \displaystyle\sum_{-\infty}^{+\infty} c_ne^{i\frac{nx\pi}{L}}\]
-Repare-se que, apesar da série ter termos complexos, uma função real de variável real apresenta apenas termos reais (graças às propriedades da exponencial complexa).
-No entanto, torna-se possível admitir funções \(f:\mathbb{R}\rightarrow\mathbb{C}\) com \(f(x)= u(x)+iv(x)\).
-
-Em análise de Fourier é frequente utilizar-se o símbolo \(\hat{f}(n)\in\mathbb{C}\) para representar os \(c_n\) definidos acima.
-
-Olhemos agora para uma restrição de \(f\) em \([-L,L]\). Podemos fazer uma identificação entre os valores de \(x\in[-L,L]\) e cada \(x'=x+2L\), uma vez que \(f(x)=f(x+2L)\), por definição da função. Obtém-se, assim, uma relação de equivalência \(f(x)\equiv f(x+2L)\) e \(f\) passa a ser \(f:\frac{\mathbb{R}}{2L\mathbb{Z}}\rightarrow\mathbb{C}\). De uma função definida em \(\mathbb{R}\) passamos para uma função definida numa circunferência de perímetro \(2L\).
-
-Geralmente é utilizado o período \(2\pi\), isto é, \(L=\pi\), de onde segue que uma função é tal que \(f: \mathbb{R}\) \(\mod{2\pi}\)\( \rightarrow \mathbb{C}\).  A \(\mathbb{R}\)\(\mod{2\pi}\) também é chamado toro uni-dimensional, \(\mathbb{T}\), cuja notação irei preferir.
-Assim, para uma função definida em \([-\pi,\pi]\)
-\[f\sim \displaystyle\sum_{n=-\infty}^{\infty}\hat{f}(n)e^{inx}\]
-Onde 
-\[\hat{f}(n)=\frac{1}{2\pi}\displaystyle\int_{-\pi}^{\pi}f(x)e^{-inx}\quad dx \quad{=}\quad \frac{1}{2\pi}\displaystyle\int_{\mathbb{T}}f(x)e^{-inx}\quad dx\]
-Nas próximas secções, as funções utilizadas serão definidas para o intervalo \([-\pi,\pi]\), uma vez que esse intervalo facilitará os cálculos. 
-\section{Série de Fourier na circunferência unitária}
-
-Define-se agora um isomorfismo \(\phi\) entre \(\mathbb{T}\) e a circunferência unitária em \(\mathbb{C}\).
-
-Seja \(S^{1}\)=\(\{ z \in\mathbb{C}:|z|=1\}\) a circunferência unitária. \(\{\mathbb{T},+ \}\) e \(\{S^{1},\times\}\) são grupos abelianos, e \(\phi: \mathbb{T}\rightarrow S^{1}\), onde \(\phi(x)=e^{ix}\). 
-
-Usando \(L=\pi\) para cada \(x,y\in[-2\pi,2\pi]\), a sua soma corresponde a adicionar ângulos em \(S^{1}\).
-
-Note-se que definiu-se \(\phi(x)\)=e\(^{inx}\) para n=1. Se \(n\neq1\), temos apenas um homomorfismo, uma vez que a aplicação deixará de ser bijectiva.
-
-Estes homomorfismos são também chamados caracteres, uma vez que são a representação do grupo \{\(\mathbb{T}\),+\} usando funções complexas.
-
-Definimos ainda um produto interno em \(\mathbb{T}\) para duas funções \(f\) e \(g\), de forma a satisfazer \(\langle f,g\rangle\)=\(\overline{\langle g,f\rangle}\) e ter a propriedades de produto interno\cite{maggie}. Então:
-\[\langle f,g\rangle=\frac{1}{2\pi}\displaystyle\int_{\mathbb{T}}f(x)\overline{g(x)}\quad dx \]
-É fácil ver ainda que para \(n,m\in \mathbb{Z}\):
-\[\langle e^{inx},e^{imx}\rangle= \frac{1}{2\pi}\displaystyle\int_{\mathbb{T}}e^{inx}e^{-imx}\quad dx= \frac{1}{2\pi}\displaystyle\int_{\mathbb{T}}e^{i(n-m)x}\quad dx\]
-Calculando o integral, vemos que as funções \(e_n(x)=e^{inx}\) formam uma base ortonormada, uma vez que:
-\[\frac{1}{2\pi}\displaystyle\int_{\mathbb{T}}e^{i(n-m)x}\quad dx= \begin{cases} 1\quad se\quad m=n\\ 0 \quad se \quad m\neq n\end{cases}\]
-Assim, os termos da série de Fourier são
-\[\hat{f}(n)=\frac{1}{2\pi}\displaystyle\int_{\mathbb{T}}f(x)e^{-inx}\quad dx= \langle f,e^{inx}\rangle\]
-Ao considerarmos os coeficientes da série de Fourier como o produto interno entre \(f\) e uma base ortonormada motiva-se o facto da transformada de Fourier funcionar em \(\mathbb{T}\to\mathbb{Z}\). O mesmo já não acontece quando estendemos a transformada para \(\mathbb{R}\) ou \(\mathbb{R}^{n}\), uma vez que uma qualquer variante de \(e_n(x)=e^{inx}\) não funciona como base nesses dois casos.
-
-\section{A Transformada de Fourier}
-Na passagem do toro uni-dimensional {$\mathbb{T}$,+} para {$\mathbb{Z}$,+}, os termos \(\hat{f}(n)\) constituem efectivamente uma transformada de Fourier. Olhando para \(\hat{f}(n)\) não como coeficientes, mas como uma transformação de funções periódicas para sucessões, podemos definir a transformada de Fourier para este caso específico.
-
-\(\textbf{Definição:}\) Dada uma função \(f\) em \{\(\mathbb{T}\),+\}, \(f\in L^1(\mathbb{T})\), definimos a sua transformada de Fourier, \(\mathcal{F}\), como
-\[\mathcal{F}(f)(n)=\hat{f}(n)=\displaystyle\int_{\mathbb{T}}f(x)e^{-inx}\quad dx,\quad \hat{f}(n)\in\{\mathbb{Z},+\}\]
-A inversa da transformada de Fourier, \(\mathcal{F}^{-1}\) é dada por
-\[\mathcal{F}^{-1}(g)(x)=\frac{1}{2\pi}\displaystyle\sum_{-\infty}^{+\infty}\hat{g}(n)e^{inx}\]
-
-\section{Generalização da transformada de Fourier}
-\subsection{Para \(\mathbb{R}\)}
-A passagem da transformada de Fourier para \(\mathbb{R}\) pode ser feita "passando-a ao limite", uma vez que, de forma não rigorosa, um somatório infinito poderá ser interpretado como um integral impróprio, fazendo \(L\to \infty\). Enquanto \(f\in L^{1}\), podemos fazer a transformada de Fourier na mesma.
-Os caracteres são agora contínuos da forma \(e^{i\xi x} :\mathbb{R}^{+}\to\mathbb{T}\).
-Seja \(\xi=\frac{n\pi}{L}\). A transformada de Fourier usando \(\xi\) é:
-\[\mathcal{F}(f)(x)=\hat{f}(\xi)=\displaystyle\int_{-L}^{L}f(x)e^{-i\xi x}\quad dx\]
-Com \(L\to\infty\):
-\[\displaystyle\int_{-\infty}^{+\infty}f(x)e^{-i\xi x}\quad dx= \hat{f}(\xi)\]
-Prossegue-se da mesma forma para a inversa:
-\[\mathcal{F}^{-1}(g)(x)=\frac{1}{2L}\displaystyle\sum_{-\infty}^{+\infty}2L\hat{g}(n)e^{i\frac{n\pi}{L}x}=\frac{1}{2\pi}\displaystyle\int_{-\infty}^{+\infty}\hat{g}(\xi)e^{i\xi x}\quad d\xi\]
-Que são as expressões obtidas nas notas do seminário\cite{drumond}, a menos de \(\frac{1}{2\pi}\). Podemos escrever a inversa da transformada como se encontra nas notas fazendo \(L=\frac{1}{2}\), o que faria desaparecer a fracção no início e multiplicando o expoente da exponencial por \(2\pi\).
-
-Repare-se que apenas se \(g\) for somável é que podemos fazer a sua inversa. No entanto, note-se que a inversa poderá não ser \(L^{1}\), aliás, essa é a regra geral. Dá-se agora um exemplo de uma transformada de Fourier.
-
-\(\textbf{Exemplo:}\)
-
-Seja \(f:\quad\mathbb{R}\to\mathbb{R}\), \(f\in L^{1}\) dada por:
-\[f(x)= \begin{cases} 1\quad se\quad-1\leq x\leq 1 \\0\quad caso\quad contr\Acute{a}rio \end{cases}\]
-
-Então:
-
-\[\mathcal{F}(f)(x)=\displaystyle\int_{-\infty}^{+\infty}f(x)e^{-ix\xi}\quad dx=\displaystyle\int_{-1}^{1}e^{-ix\xi}\quad dx=-\frac{1}{i\xi}e^{-ix\xi}\Biggr|_{-1}^{1}=\]\[=\frac{e^{-i\xi}-e^{-i\xi}}{i\xi}=\frac{2\sin{\xi}}{\xi}.\]
-
-\subsection{Para \(\mathbb{R}^n\)}
-Por extensão, é possível definir a transformada de Fourier para \(\mathbb{R}^n\), desde com as alterações adequadas.
-
-\(\textbf{Definição:}\) Dada uma função \(f:\) \(\mathbb{R}^n\rightarrow\mathbb{C}\) tal que \(f\in L^1(\mathbb{R}^n)\), define-se a sua transformada de Fourier como
-\[\mathcal{F}(f)=\hat{f}(\Vec{\xi}) = \displaystyle\int_{\mathbb{R}^n}f(\vec{x})e^{-i\vec{x}\cdot\vec{\xi}}\quad dx\]
-A sua inversa é definida por
-\[\mathcal{F}^{-1}(g)(\vec{x})=\frac{1}{(2\pi)^{n}} \displaystyle\int_{\mathbb{R}^n}g(\vec{x})e^{-i\vec{x}\cdot\vec{\xi}}\quad d\Vec{\xi}\]
-
-Mais uma vez, apenas se \(g\) for somável é que podemos fazer a sua inversa. No entanto, note-se que a inversa poderá não ser \(L^{1}\).
-
-\section{Propriedades da Transformada de Fourier}
-
-Para finalizar, listo aqui algumas propriedades da transformada de Fourier, dada por \(\mathcal{F}\), válidas \(\mathbb{T}\) e \(\mathbb{R}^{n}\), e a respectiva demonstração:
-\begin{itemize}
-    \item para \(\mathbb{T}\) e \(\mathbb{R}^{n}\), \(\mathcal{F}\) é um operador linear, isto é
+    The Conditional Independence simplifying assumption: given the output y, the input variables are independent. Ex. probability of two English words appearing are independent if the email is spam.
     
-    \[\mathcal{F}(\alpha f+\beta g)(\xi)=\alpha\mathcal{F}(f)+\beta\mathcal{F}(g),\quad\alpha,\beta\in\mathbb{R}.\] 
-    \textbf{Demonstração:}
-    
-    Prova-se que \(\mathcal{F}\) é linear em \(\mathbb{R}^{n}\), uma vez que a demonstração para \(f\) em \(\mathbb{T}\) é idêntica. Temos:
-    
-    \[\mathcal{F}(\alpha f+\beta g)(\vec{\xi})=\displaystyle\int_{\mathbb{R}^{n}}(\alpha f(\vec{x})+\beta g(\vec{x}))e^{-i\vec{x}\cdot\vec{\xi}}\quad dx=\]
-    \[=\displaystyle\int_{\mathbb{R}^{n}}\alpha f(\vec{x})e^{-i\vec{x}\cdot\vec{\xi}}+\beta g(\vec{x})e^{-i\vec{x}\cdot\vec{\xi}}\quad dx=\]
-    \[=\alpha\displaystyle\int_{\mathbb{R}^{n}}f(\vec{x})e^{-i\vec{x}\cdot\vec{\xi}}\quad dx +\beta\displaystyle\int_{\mathbb{R}^{n}}g(\vec{x}))e^{-i\vec{x}\cdot\vec{\xi}}\quad dx=\]
-    \[\alpha\mathcal{F}(f)(\vec{\xi})+\beta\mathcal{F}(g)(\vec{\xi})\]
-    
-    O que verifica a linearidade da transformada.
-    \item para \(\mathbb{T}\) e \(\mathbb{R}^{n}\), \(\mathcal{F}((f)\) é limitada se \(f\in L^{1}\).
-    
-\textbf{Demonstração:}
-Majoramos\cite{maggie2} \(\mathcal{F}(f)=\hat{f}(\xi)\).
-\[sup(|\hat{f}(\xi)|)\leq \Biggr|_{}\displaystyle\int_{\mathbb{R}^{n}}f(\vec{x})e^{-i\vec{x}\cdot\vec{\xi}}\quad dx\Biggr|_{}\leq\displaystyle\int_{\mathbb{R}^{n}}|f(\vec{x})| dx = ||f||_{L^{1}}\]
-    \item para \(\mathbb{T}\) e \(\mathbb{R}^{n}\), existem funções \(L^{1}\) cuja Transformada de Fourier não está em \(L^{1}\)
-    
-\textbf{Demonstração:}
-Podemos olhar para o exemplo dado na secção \(\mathbf{6.1}\).
+    Recall:
+    \begin{itemize}
+        \item $P(A,B) = P(A|B)P(B)$
+    \end{itemize}
 
-A função dada no exemplo é \(L^{1}\), no entanto
-\[\mathcal{F}(f)= \frac{2\sin(\xi)}{\xi}\] não é integrável à Lebesgue em \(\mathbb{R}\). É fácil ver isso, uma vez que o integral da função em \([0,+\infty[\) diverge.
+    Relating back to Conditional Independence:
+    \begin{itemize}
+        \item $P(y,x) = P(y,x_1,x_2,...x_n) = P(x_1|y)P(x_2|y),...P(x_n|y)P(y)$ 
+        \item $P(y,x) = P(y) \prod_{i=1}{P(x_i|y)}$
+    \end{itemize}
 
-Sabemos que \(|\sin{x}|<1\), como tal, o integral do módulo é tal que:
-\[\displaystyle\int_{0}^{+\infty}\Biggr| \frac{\sin{x}}{x}\Biggr|\quad dx= \displaystyle\sum_{n=0}^{\infty}\displaystyle\int_{k\pi}^{(k+1)\pi}\Biggr| \frac{\sin{x}}{x}\Biggr|\quad dx\quad >\]
-\[>\quad\displaystyle\sum_{n=0}^{\infty}\displaystyle\int_{k\pi}^{(k+1)\pi}\frac{|\sin{x}|}{k\pi}=\displaystyle\sum_{n=0}^{\infty}\frac{1}{k\pi}.\]
-É sabido que esta série diverge, logo o integral também diverge e, portanto, \(\frac{\sin{x}}{x}\notin L^{1}(\mathbb{R})\).
+    "Each factor $P(x_i|y)$ can be completely described by 4 parameters with 2 degrees of freedom to be exact". What does this mean? $x_i$ has 2 possible values, and $y_i$ has two possible values
 
-\end{itemize}
+\section[]{A bird’s eye overview of the first part of the course}
+    
+    Graphical model discussion:
+    \begin{itemize}
+        \item Representation: How to express probability distribution of real-world phenomenon?
+        \item Inference: Given probability model, how to find relevant answers.
+        \item Learning: Fitting model to a data-set.
+    \end{itemize}
+    
 
 \printbibliography[title={Referências}]
 \end{document}
