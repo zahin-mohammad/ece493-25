@@ -194,7 +194,17 @@
     \end{equation}
 
     \subsection{Bayes Rule}
-    Don't understand the $y'$ in this!
+    Discrete:
+    \begin{align}
+        P_{Y|X}(y|x) & = \frac{P_{XY}(x,y)}{P_X(x)} \\
+        & = \frac{P_{X|Y}(X|Y)P_Y(y)}{\sum_{y\prime \in Val(Y)}P_{X|Y}(x|y\prime)P_Y(y\prime)}
+    \end{align}
+
+    Continuous:
+    \begin{align}
+        f_{Y \mid X}(y\mid x) & = \frac{f_{XY}(x, y)}{f_X(x)} \\ 
+        & = \frac{f_{X \mid Y} (x \mid y) f_Y(y)}{\int^{\infty}_{- \infty} f_{X\mid Y} (x \mid y') f_Y (y') dy'}.
+    \end{align}
 
     \subsection{Independence}
     \begin{itemize}
@@ -209,7 +219,15 @@
     \begin{itemize}
         \item $E[g(X,Y)] = \sum_{x \in Val(X)} \sum_{y \in Val(Y)} g(x, y)p_{XY}(x, y)$
         \item $E[g(X, Y)] = \int^{\infty}_{-\infty} \int^{\infty}_{-\infty} g(x, y)f_{XY}(x, y)dxdy$
-        \item $[X,Y] = E[(X − E[X])(Y−E[Y])]$
+        \item $Cov[X,Y] = E[(E-E[X])(Y-E[Y])] = E[XY]-E[X]E[Y]$
+    \end{itemize}
+    Note: $cov[X.Y] = 0$ is called uncorrelated.
+
+    Properties:
+    \begin{itemize}
+        \item $Var[X+Y] = Var[X]+Var[Y]+2Cov[X, Y]$
+        \item If $X$ and $Y$ are independent then $Cov[X,Y]=0$
+        \item If $X$ and $Y$ are independent then $E[f(X)g(Y)] = E[f(X)]E[g(Y)]$
     \end{itemize}
 
 \printbibliography[title={Referências}]
