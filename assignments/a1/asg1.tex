@@ -370,6 +370,26 @@ Your answer can be handwritten converted to an electronic file by and scanner or
     \caption{Gridworld example: exceptional reward dynamics (left) and state-value function for the equiprobable random policy (right)}
     \label{fig:book3.14}
 \end{figure}
+\setlength{\parskip}{6pt}
+
+Definitions:
+\begin{itemize}
+    \item $\upsilon_{\pi}(s) = \sum_{a} \pi(a \vert s) \sum_{s \prime, r}(s\prime, r \vert s, a)[r + \gamma\upsilon_{\pi}(s\prime)]$
+\end{itemize}
+Let's break the bellman expectation equation into it's components.
+\begin{equation}
+    \begin{aligned}
+        \sum_{a} \pi(a \vert s) = 1
+    \end{aligned}
+\end{equation}
+\begin{equation}
+    \begin{aligned}
+        \sum_{s \prime, r}(s\prime, r \vert s, a)[r + \gamma\upsilon_{\pi}(s\prime)] & = \frac{0+0.9*8.8}{4}+\frac{0+0.9*5.3}{4} + \frac{0+0.9*2.3}{4} + \frac{-1+0.9*4.4}{4} \\ 
+        & = 4.43 \\ 
+        & \approx 4.4
+    \end{aligned}
+\end{equation}
 
 
 \end{document}
+shown in the figure), along with a reward, r, depending on its dynamics given by the
