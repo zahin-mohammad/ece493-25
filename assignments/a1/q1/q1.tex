@@ -1,0 +1,235 @@
+\documentclass[11pt,onecolumn]{article}
+\usepackage{booktabs, multirow} % for borders and merged ranges
+\usepackage{amsmath,amssymb,graphicx,algorithmic,xspace,url}
+\usepackage[titlenotnumbered,noend,noline]{algorithm2e}
+\usepackage{enumerate}
+\usepackage{mathrsfs}
+\usepackage{color,soul}
+\usepackage{array}
+\usepackage{csquotes}
+\usepackage{dirtytalk}
+
+
+
+\setlength{\pdfpagewidth}{8.5in}
+\setlength{\pdfpageheight}{11in}
+\setlength{\evensidemargin}{-0.1in} \setlength{\oddsidemargin}{-0.1in}
+\setlength{\textwidth}{6.5in} \setlength{\textheight}{9.0in}
+\setlength{\topmargin}{-0.6in}
+
+\sloppypar
+\begin{document}
+
+\begin{center}
+\begin{Large}
+ECE 493, Spring 2020, Assignment 1\\
+Due: Friday June 19, 11:59pm
+\end{Large}
+\end{center}
+\vspace{.2em}
+
+\vspace{.2em}
+\begin{center}
+Submit to the UWaterloo Crowdmark site using the link you received via email.
+Your answer can be handwritten converted to an electronic file by and scanner or camera; or the answers can be typed up in a word processor or LaTeX and submitted as a pdf.
+\end{center}
+\vspace{.2em}
+
+\vspace{.2em}
+
+
+\section{Basics of Probability}
+
+\begin{enumerate}
+    \item Let $X$ and $Y$ be two random variables. If $X$ and $Y$ are uncorrelated, does it imply $X$ and $Y$ are independent? If yes, show how, else provide a counterexample. 
+    \setlength{\parskip}{6pt}
+
+    Definitions:
+    \begin{itemize}
+        \item $Cov(X,Y) = E[XY] - E[X]E[Y]$
+        \item $Corr(X,Y) = \frac{Cov(X,Y)]}{\sqrt{Var(X)*Var(Y)}}$
+    \end{itemize}
+    To be uncorrelated means to have a $Covariance$ of 0:
+    \begin{equation}
+        E[XY] = E[X]E[Y].
+    \end{equation}
+    \hl{$\therefore$ $X$ and $Y$ are independent.} 
+    
+    \item A satellite is sending a binary message/code, i.e.\ a sequence of 1s and 0s. Suppose 70\% of the message to be sent is 0s. There is a 80\% chance of a given 0 or 1 being received correctly. Find the probability that 0 was sent if 1 was received. 
+    \setlength{\parskip}{6pt}
+
+    Definitions:
+    \begin{itemize}
+        \item $P(A \vert B) = \frac{P(B \vert A)*P(A)}{P(B \vert A)P(A) + P(B \vert A^c)P(A^c)}$
+    \end{itemize}
+    Let the event $transmission=0_2$ be represented as $t0_2$ and the event  $received = 1_2$ be represented as $r1_2$.
+    \begin{equation}
+        P(transmission=0_2 \vert received = 1_2) =  P(t0_2 \vert r1_2)
+    \end{equation}
+    
+    \begin{equation}
+        \begin{aligned}
+        P(t0_2 \vert r1_2) & =  \frac{P(r1_2 \vert t0_2)P(t0_2)}{P(r1_2 \vert t0_2)P(t0_2) + P(r1_2 \vert t1_2)P(t1_2)} \\ 
+        & = \frac{(1-0.8)*0.7}{(1-0.8)*0.7 + 0.8*0.3} \\
+        & = 0.37
+        \end{aligned}
+    \end{equation}
+    \hl{$\therefore$ The probability that a $0_2$ was sent given that a $1_2$ was received is $37\%$.}
+    \item \textbf{Basic Inference}: The probability of getting a headache is $1/10$, getting the flu is $1/40$, and if you have a flu, there's $1/2$ chance of getting the headache. One day you wake up with a headache and say `Dang, I have a headache. Since 50\% of flues are associated with headaches, I must have a 50-50 chance of coming down with the flu'. Is this line of reasoning correct? Why/Why not?
+    \setlength{\parskip}{6pt}
+
+    Definitions:
+    \begin{itemize}
+        \item $P(A \vert B) = \frac{P(B \vert A)*P(A)}{P(B \vert A)P(A) + P(B \vert A^c)P(A^c)}$
+    \end{itemize}
+
+    This line of reasoning is not correct because the problem states that the of getting the a headache given you have the flu is 50\%. The problem \textbf{does not} state that the probability of getting the flu given you have a headache is 50\%. These two statements are not equivalent.
+
+    Let $h$ be the event that you have a headache, and $f$ be the event that you have the flu. The problem describes the following conditional probability:
+    \begin{equation}
+        \begin{aligned}
+        P(f \vert h) & =  \frac{P(h \vert f)*P(f)}{P(h \vert f)P(f) + P(h \vert f^c)P(f^c)} \\
+        & =  \frac{0.5*0.025}{0.5*0.025 + 0.1*(1-0.025)} \\ 
+        & =  0.11 \\ 
+    \end{aligned}
+    \end{equation}
+    \hl{$\therefore$ There is only an 11\% chance of getting the flu given you have a headache, not 50\%.}
+
+    \item \textbf{Bayesian Learning}: We are interested in forming a belief (hypothesis) about our environment based on what we have observed (evidence). Bayes rule is important when we want to assign a probability to our hypothesis after observing some evidence. Recall Bayes Rule:
+    
+    \begin{equation*}
+        \mathbb{P}(H|e) = \frac{\mathbb{P}(e|H) \mathbb{P}(H)}{\mathbb{P}(e)},
+    \end{equation*}
+    where $H$ is the hypothesis, $e$ is the evidence, $\mathbb{P}(H)$ is our prior distribution over the different hypotheses, $\mathbb{P}(e|H)$ is the likelihood of the evidence given our hypothesis, $\mathbb{P}(H|e)$ is the posterior distribution of the different hypotheses given the evidence, and $\mathbb{P}(e)$ is the probability of the evidence.
+    
+    Suppose there are five kinds of bags of marbles: 
+    \begin{enumerate}
+        \item 10\% are bags of type $h_1$ with 100\% red marbles.
+        \item 20\% are bags of type $h_2$ with 75\% red marbles and 25\% green marbles.
+        \item 40\% are bags of type $h_3$ with 50\% red marbles and 50\% green marbles.
+        \item 20\% are bags of type $h_4$ with 25\% red marbles and 75\% green marbles.
+        \item 10\% are bags of type $h_5$ with 100\% green marbles.
+    \end{enumerate}
+    
+    We buy a bag at random, pick 5 marbles from the bag and observe them to be all green. We are interested in knowing what type of bag we bought and what colour the next marble will be. 
+    
+    Let $e$ be the event that the 5 marbles drawn are green and let $\mathbb{P}(e) = \alpha$. 
+    
+    \hl{ASSUMPTION: Each marble pick is independent (picking marbles then putting thme back in the bag).}
+
+    \begin{enumerate}
+        \item Given that the 5 marbles drawn were green, compute the probability of each type of bag i.e.\ what is the probability of bag type $h_i$ for $i = \{1, 2, 3, 4, 5\}$, given that 5 marbles picked were green?
+        \setlength{\parskip}{6pt}
+            
+        Definitions:
+        \begin{itemize}
+            \item $P(A \vert B) = \frac{P(B \vert A)*P(A)}{P(B \vert A)P(A) + P(B \vert A^c)P(A^c)}$
+        \end{itemize}
+        \begin{equation}
+            \begin{aligned}
+                P(h_i \vert 5g) &= \frac{P(5g \vert h_i)*P(h_i)}{P(5g \vert h_i)*P(h_i) + P(5g \vert h_i^c)P(h_i^c)} \\ 
+            \end{aligned}
+        \end{equation}
+        \begin{equation}
+            \begin{aligned}
+                P(h_1 \vert 5g) &= \frac{0*0.1}{0*0.1 + 0.25^5*0.2 +  0.5^5*0.4 + 0.75^5*0.2 + 1^5*0.1} \\
+                & = 0
+            \end{aligned}
+        \end{equation}
+        \begin{equation}
+            \begin{aligned}
+                P(h_2 \vert 5g) &= \frac{0.25^5*0.2}{0*0.1 + 0.25^5*0.2 +  0.5^5*0.4 + 0.75^5*0.2 + 1^5*0.1} \\
+                & = 0.00122
+            \end{aligned}
+        \end{equation}
+
+        \begin{equation}
+            \begin{aligned}
+                P(h_3 \vert 5g) &= \frac{0.5^5*0.4}{0*0.1 + 0.25^5*0.2 +  0.5^5*0.4 + 0.75^5*0.2 + 1^5*0.1} \\
+                & = 0.078
+            \end{aligned}
+        \end{equation}
+
+        \begin{equation}
+            \begin{aligned}
+                P(h_4 \vert 5g) &= \frac{0.75^5*0.2}{0*0.1 + 0.25^5*0.2 +  0.5^5*0.4 + 0.75^5*0.2 + 1^5*0.1} \\
+                & = 0.30
+            \end{aligned}
+        \end{equation}
+
+        \begin{equation}
+            \begin{aligned}
+                P(h_5 \vert 5g) &= \frac{1^5*0.1}{0*0.1 + 0.25^5*0.2 +  0.5^5*0.4 + 0.75^5*0.2 + 1^5*0.1} \\
+                & = 0.62
+            \end{aligned}
+        \end{equation}
+        
+        \item Use the results from part (a) to find the value of $\alpha$ using the axioms of probability.
+        \setlength{\parskip}{6pt}
+
+        Definitions:
+        \begin{itemize}
+            \item $P(A) = P(A \vert B)*P(B) + P(A \vert B^c)*P(B^c)$
+        \end{itemize}
+        
+        \begin{equation}
+            \begin{aligned}
+                P(e) & = \sum_{i=1}^{i=5}P(e \vert h_i)*P(h_i) \\ 
+                    & = 0*0.1 + 0.25^5*0.2 +  0.5^5*0.4 + 0.75^5*0.2 + 1^5*0.1
+                    & = 0.16
+            \end{aligned}
+        \end{equation}
+        \hl{$\therefore \alpha = 0.16$}
+        \item Let $X$ be a random variable that represents the outcome of the next pick from the bag i.e.\ $X$ can be either green or red. How would you make a prediction about the outcome of $X$, given that the first 5 marbles picked were green? (Give an equation for $\mathbb{P}(X|e)$) Hint: Think about how you can use the concept of joint and marginal distributions with the events of picking different types of bags.
+        \setlength{\parskip}{6pt}
+
+        Let $Y$ represent a random variable for the number of green marbles drawn from the bag. Then to solve for 
+        \begin{equation}
+            p_{X\vert Y}(x \vert e) = \frac{p_{YX}(e,x)}{p_Y(e)} 
+        \end{equation}
+
+        \item Use the result from part (c) to compute $\mathbb{P}(X=\text{"green"} |e)$.
+        \setlength{\parskip}{6pt}
+
+        Let the event of the 6th marble picked being green be represented as $g$.
+        \begin{equation}
+            \begin{aligned}
+                p_{X\vert Y}(g \vert e) & = \frac{p_{YX}(e, g)}{p_Y(e)} \\
+            \end{aligned}
+        \end{equation}
+        From 4.b, it can be seen that:
+        \begin{equation}
+            \begin{aligned}
+                p_{Y}(e) & = 0.16. 
+            \end{aligned}
+        \end{equation}
+        Following a similar process as 4.a \& 4.b, it can be seen that:
+        \begin{equation}
+            \begin{aligned}
+                p_{X}(g) & = 0*0^1*0.1 + 0.25^1*0.2 +  0.5^1*0.4 + 0.75^1*0.2 + 1^1*0.1 \\
+                & = 0.5
+            \end{aligned}
+        \end{equation}
+        Let H represent the bag picked. Due to the assumption stated above, of marble pickings being independent:
+        \begin{equation}
+            \begin{aligned}
+                p_{YX}(e, g) & = \sum_{i=1}^{i=5}p_{YX \vert H=h_i}(e, g) \\
+                & = \sum_{i=1}^{i=5}p_{Y \vert H}(e, h_i)*p_{X \vert H}(g, h_i)*P(h_i) \\
+                & =  0*0^1*0*0.1 + 0.25^1*0.25^5*0.2 +  0.5^1*0.5^5*0.4 + 0.75^1*0.75^5*0.2 + 1^1*1^5*0.1 \\
+                & =  0 + 0.25^6*0.2 +  0.5^6*0.4 + 0.75^6*0.2 + 1^6*0.1 \\
+                & = 0.142
+            \end{aligned}
+        \end{equation}
+        Putting it all together:
+    \begin{equation}
+        \begin{aligned}
+            p_{X\vert Y}(g \vert e) & = \frac{p_{XY}(g,e)}{p_Y(e)} \\
+            & = \frac{0.142}{0.16} \\
+            & = 0.89
+        \end{aligned}
+    \end{equation}
+    \hl{$\therefore$ The probability of picking a green marble after picking 5 green marbles is 89\%.}
+    \end{enumerate}
+    
+\end{enumerate} 
+\end{document}
