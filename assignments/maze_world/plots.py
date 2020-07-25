@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+PLOT_DIR = "./plots/"
+
 
 def plot_rewards(task_experiments):
     fig, axs = plt.subplots(2, 2)
@@ -24,7 +26,7 @@ def plot_rewards(task_experiments):
     fig.suptitle('DP and Learning Algorithm Episodes vs Rewards', fontsize=18)
 
     fig.set_size_inches((8.5, 11), forward=False)
-    fig.savefig("reward_graph_by_task.png", dpi=500)
+    fig.savefig(f"{PLOT_DIR}reward_graph_by_task.png", dpi=500)
     # plt.show()
 
 
@@ -58,7 +60,7 @@ def plot_individual_plots(task_experiments):
     fig.suptitle('DP and Learning Algorithm Episodes vs Rewards', fontsize=18)
 
     fig.set_size_inches((8.5, 11), forward=False)
-    fig.savefig("reward_graph_by_algorithm.png", dpi=500)
+    fig.savefig(f"{PLOT_DIR}reward_graph_by_algorithm.png", dpi=500)
 
 
 def plot_time(task_experiments):
@@ -91,5 +93,5 @@ def plot_time(task_experiments):
     fig.suptitle('Average time/episode For All Tasks', fontsize=18)
 
     fig.set_size_inches((8.5, 11), forward=False)
-    fig.savefig("time_graph.png", dpi=500)
+    fig.savefig(f"{PLOT_DIR}time_graph.png", dpi=500)
     # plt.show()
