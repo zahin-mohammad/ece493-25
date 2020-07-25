@@ -3,7 +3,7 @@ import sys
 import matplotlib.pyplot as plt
 import pickle
 import time
-import threading
+
 from maze_env import Maze
 
 DEBUG = 1
@@ -18,7 +18,7 @@ def debug(debuglevel, msg, **kwargs):
             print(msg)
 
 
-def update(task_num, env, RL, data,
+def update(env, RL, data,
            sim_speed=0.001,
            showRender=False,
            renderEveryNth=1000,
