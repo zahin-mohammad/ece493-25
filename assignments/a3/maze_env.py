@@ -16,12 +16,12 @@ origin = np.array([UNIT/2, UNIT/2])
 
 
 class Maze(tk.Tk, object):
-    def __init__(self, agentXY, goalXY, walls=[],pits=[]):
+    def __init__(self, agentXY, goalXY, walls=[], pits=[]):
         super(Maze, self).__init__()
         self.action_space = ['u', 'd', 'l', 'r']
         self.n_actions = len(self.action_space)
         self.wallblocks = []
-        self.pitblocks=[]
+        self.pitblocks = []
         self.UNIT = 40   # pixels per cell (width and height)
         self.MAZE_H = 10  # height of the entire grid in cells
         self.MAZE_W = 10  # width of the entire grid in cells
@@ -29,10 +29,10 @@ class Maze(tk.Tk, object):
         self.geometry('{0}x{1}'.format(MAZE_H * UNIT, MAZE_W * UNIT))
         self.build_shape_maze(agentXY, goalXY, walls, pits)
 
-    def build_shape_maze(self,agentXY,goalXY, walls,pits):
+    def build_shape_maze(self, agentXY, goalXY, walls, pits):
         self.canvas = tk.Canvas(self, bg='white',
-                           height=MAZE_H * UNIT,
-                           width=MAZE_W * UNIT)
+                                height=MAZE_H * UNIT,
+                                width=MAZE_W * UNIT)
 
         # create grids
         for c in range(0, MAZE_W * UNIT, UNIT):
@@ -42,16 +42,16 @@ class Maze(tk.Tk, object):
             x0, y0, x1, y1 = 0, r, MAZE_W * UNIT, r
             self.canvas.create_line(x0, y0, x1, y1)
 
-
-        for x,y in walls:
-            self.add_wall(x,y)
-        for x,y in pits:
-            self.add_pit(x,y)
-        self.add_goal(goalXY[0],goalXY[1])
-        self.add_agent(agentXY[0],agentXY[1])
+        for x, y in walls:
+            self.add_wall(x, y)
+        for x, y in pits:
+            self.add_pit(x, y)
+        self.add_goal(goalXY[0], goalXY[1])
+        self.add_agent(agentXY[0], agentXY[1])
         self.canvas.pack()
 
     '''Add a solid wall block at coordinate for centre of bloc'''
+
     def add_wall(self, x, y):
         wall_center = origin + np.array([UNIT * x, UNIT*y])
         self.wallblocks.append(self.canvas.create_rectangle(
@@ -60,6 +60,7 @@ class Maze(tk.Tk, object):
             fill='black'))
 
     '''Add a solid pit block at coordinate for centre of bloc'''
+
     def add_pit(self, x, y):
         pit_center = origin + np.array([UNIT * x, UNIT*y])
         self.pitblocks.append(self.canvas.create_rectangle(
@@ -68,6 +69,7 @@ class Maze(tk.Tk, object):
             fill='blue'))
 
     '''Add a solid goal for goal at coordinate for centre of bloc'''
+
     def add_goal(self, x=4, y=4):
         goal_center = origin + np.array([UNIT * x, UNIT*y])
 
@@ -77,6 +79,7 @@ class Maze(tk.Tk, object):
             fill='yellow')
 
     '''Add a solid wall red block for agent at coordinate for centre of bloc'''
+
     def add_agent(self, x=0, y=0):
         agent_center = origin + np.array([UNIT * x, UNIT*y])
 
@@ -85,7 +88,7 @@ class Maze(tk.Tk, object):
             agent_center[0] + 15, agent_center[1] + 15,
             fill='red')
 
-    def reset(self, value = 1, resetAgent=True):
+    def reset(self, value=1, resetAgent=True):
         self.update()
         time.sleep(0.2)
         if(value == 0):
@@ -94,34 +97,37 @@ class Maze(tk.Tk, object):
             if(resetAgent):
                 self.canvas.delete(self.agent)
                 self.agent = self.canvas.create_rectangle(origin[0] - 15, origin[1] - 15,
-                origin[0] + 15, origin[1] + 15,
-                fill='red')
+                                                          origin[0] +
+                                                          15, origin[1] + 15,
+                                                          fill='red')
 
             return self.canvas.coords(self.agent)
 
     '''computeReward - definition of reward function'''
+
     def computeReward(self, currstate, action, nextstate):
-            reverse=False
-            if nextstate == self.canvas.coords(self.goal):
-                reward = 1
-                done = True
-                nextstate = 'terminal'
-            elif nextstate in [self.canvas.coords(w) for w in self.wallblocks]:
-                reward = -0.3
-                done = False
-                nextstate = currstate
-                reverse=True
-            elif nextstate in [self.canvas.coords(w) for w in self.pitblocks]:
-                reward = -10
-                done = True
-                nextstate = 'terminal'
-                reverse=False
-            else:
-                reward = -0.1
-                done = False
-            return reward,done, reverse
+        reverse = False
+        if nextstate == self.canvas.coords(self.goal):
+            reward = 1
+            done = True
+            nextstate = 'terminal'
+        elif nextstate in [self.canvas.coords(w) for w in self.wallblocks]:
+            reward = -0.3
+            done = False
+            nextstate = currstate
+            reverse = True
+        elif nextstate in [self.canvas.coords(w) for w in self.pitblocks]:
+            reward = -10
+            done = True
+            nextstate = 'terminal'
+            reverse = False
+        else:
+            reward = -0.1
+            done = False
+        return reward, done, reverse
 
     '''step - definition of one-step dynamics function'''
+
     def step(self, action):
         s = self.canvas.coords(self.agent)
         base_action = np.array([0, 0])
@@ -138,14 +144,16 @@ class Maze(tk.Tk, object):
             if s[0] > UNIT:
                 base_action[0] -= UNIT
 
-        self.canvas.move(self.agent, base_action[0], base_action[1])  # move agent
+        self.canvas.move(
+            self.agent, base_action[0], base_action[1])  # move agent
 
         s_ = self.canvas.coords(self.agent)  # next state
 
         # call the reward function
         reward, done, reverse = self.computeReward(s, action, s_)
         if(reverse):
-            self.canvas.move(self.agent, -base_action[0], -base_action[1])  # move agent back
+            # move agent back
+            self.canvas.move(self.agent, -base_action[0], -base_action[1])
             s_ = self.canvas.coords(self.agent)
 
         return s_, reward, done
