@@ -30,8 +30,15 @@ class ExpectedSarsaLearning():
     def learn(self, s, a, r, s_):
         a_ = self.choose_action(s_)
 
-        expected_q = sum([self.q[s_][action]
-                          for action in self.actions])
+        state_action_values = np.array([self.q[s_][action]
+                                        for action in self.actions])
+        # weighted probability
+        probabilities = state_action_values / np.sum(state_action_values)
+
+        expected_q = np.sum(probabilities * np.array([self.q[s_][action]
+                                                      for action in self.actions]))
+        # expected_q = sum([self.q[s_][action]
+        #   for action in self.actions])
         self.q[s][a] = self.q[s][a] + \
             self.lr*(r + self.dr*expected_q-self.q[s][a])
         return s_, a_

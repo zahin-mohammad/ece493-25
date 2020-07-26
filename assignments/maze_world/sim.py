@@ -90,8 +90,10 @@ def q_learning(task):
     do_algorithm(rl, task, env)
 
 
-algos = [value_iteration, policy_iteration,
-         sarsa_learning, expected_sarsa_learning, q_learning]
+# algos = [value_iteration, policy_iteration,
+#          sarsa_learning, expected_sarsa_learning, q_learning]
+
+algos = [expected_sarsa_learning]
 
 
 def run(method, task_num):
