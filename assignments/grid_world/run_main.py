@@ -3,6 +3,7 @@ import sys
 import matplotlib.pyplot as plt
 import pickle
 import time
+from MC_brain import MonteCarloAlgorithm
 
 from maze_env import Maze
 
@@ -23,7 +24,7 @@ def update(env, RL, data,
            showRender=False,
            renderEveryNth=1000,
            printEveryNth=500,
-           episodes=100):
+           episodes=1000):
     global_reward = np.zeros(episodes)
     data['global_reward'] = global_reward
     data[RL.display_name] = []
@@ -37,6 +38,10 @@ def update(env, RL, data,
         # RL choose action based on state
         action = RL.choose_action(str(state))
 
+        states = []
+        actions = []
+        rewards = []
+
         while True:
             # fresh env
             if(showRender or (episode % renderEveryNth) == 0):
@@ -44,6 +49,13 @@ def update(env, RL, data,
 
             # RL take action and get next state and reward
             state_, reward, done = env.step(action)
+
+            states.append(str(state))
+            actions.append(action)
+            rewards.append(reward)
+            # if isinstance(RL, MonteCarloAlgorithm):
+            #     RL.store_state_action_reward(state, action, reward)
+            
             global_reward[episode] += reward
             debug(2, f'state(ep:{episode},t:{t})={state}')
             debug(
@@ -55,7 +67,9 @@ def update(env, RL, data,
             state, action = RL.learn(str(state), action, reward, str(state_))
 
             # break while loop when end of this episode
-            if done:
+            if done or len(rewards) > 1000:
+                if isinstance(RL, MonteCarloAlgorithm):
+                    RL.update(states, actions, rewards)
                 break
             else:
                 t = t+1

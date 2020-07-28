@@ -4,11 +4,13 @@ import threading
 from run_main import update, debug
 from maze_env import Maze
 from plots import *
-# A3 rl
+# A3 MC
+from monte_carlo.MC_policy_gradient import PolicyGradientLearning
+# A3 TD
 from learning_algorithms.RL_brain_double_q_learning import DoubleQLearning
 from learning_algorithms.RL_brain_eligibility_trace_sarsa import EligibilityTraceSarsaLearning
 from learning_algorithms.RL_brain_expected_sarsa import ExpectedSarsaLearning
-# A2 rl
+# A2 TD
 from learning_algorithms.RL_brain_q_learning import QLearning
 from learning_algorithms.RL_brain_sarsa import SarsaLearning
 # A2 dp
@@ -16,11 +18,12 @@ from dynamic_programming.DP_brain_PI import PolicyIteration
 from dynamic_programming.DP_brain_VI import ValueIteration
 
 
+
 # showRender = False
 # episodes = 2000
 # renderEveryNth = 10000
 # printEveryNth = 10000
-do_plot_rewards = True
+do_plot_rewards = False
 
 # Task Specifications
 
@@ -51,10 +54,10 @@ def append_data(task_num, env, rl, data):
 def do_algorithm(rl, task, env):
     data = {}
     env.after(10, update(env, rl, data,
-                         showRender=False,
-                         episodes=1,
-                         renderEveryNth=10000,
-                         printEveryNth=10000,
+                         showRender=True,
+                         episodes=2000,
+                         renderEveryNth=100,
+                         printEveryNth=100,
                          ))
     env.mainloop()
     append_data(task, env, rl, data)
@@ -89,11 +92,16 @@ def q_learning(task):
     rl = QLearning(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
+def policy_gradient_learning(task):
+    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1])
+    rl = PolicyGradientLearning(list(range(env.n_actions)), 4)
+    do_algorithm(rl, task, env)
+
 
 # algos = [value_iteration, policy_iteration,
 #          sarsa_learning, expected_sarsa_learning, q_learning]
 
-algos = [expected_sarsa_learning]
+algos = [policy_gradient_learning]
 
 
 def run(method, task_num):
@@ -109,9 +117,10 @@ def run(method, task_num):
 
 threads, sem = [], threading.Semaphore()
 
-for i in range(len(algos)):
-    for task_num, task in enumerate(tasks):
-        threads.append(threading.Thread(target=run, args=(i, task_num)))
+for algo in algos:
+    threads.append(threading.Thread(target=algo, args=(0,)))
+    # for task_num, task in enumerate(tasks):
+    #     threads.append(threading.Thread(target=algo, args=(task_num,)))
 
 for i, thread in enumerate(threads):
     debug(1, f'Starting thread {i}')

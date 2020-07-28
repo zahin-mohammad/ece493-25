@@ -6,4 +6,5 @@ class MonteCarloAlgorithm:
     def learn(self, s, a, r, s_):
         pass
     
-    def update(self)
+    def update(self):
+        pass
