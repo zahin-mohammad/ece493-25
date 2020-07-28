@@ -8,8 +8,8 @@ from tensorflow.keras.layers import Dense
 
 class PolicyGradientLearning(MonteCarloAlgorithm):
     def __init__(self, actions, num_features,
-        learning_rate=0.01, 
-        discount_rate=0.9, 
+        learning_rate=0.0001, 
+        discount_rate=1, 
         epsilon = 0.1,
         debug=True):
 
@@ -29,7 +29,8 @@ class PolicyGradientLearning(MonteCarloAlgorithm):
         self.model.add(Dense(50, input_dim=self.num_features, activation='relu'))    
         self.model.add(Dense(25, activation='relu'))
         self.model.add(Dense(self.num_actions, activation='softmax'))
-        self.model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'],)
+        opt = keras.optimizers.Adam(learning_rate=self.lr)
+        self.model.compile(loss='mean_squared_error', optimizer=opt, metrics=['accuracy'])
 
     def discounted_rewards(self, rewards):
         # Calculate discounted rewards, going backwards from end
@@ -56,12 +57,13 @@ class PolicyGradientLearning(MonteCarloAlgorithm):
         return s_, self.choose_action(s)
     
     def features(self, state):
-        state_features = np.array([list(literal_eval(state))])
+        state_features = np.array([literal_eval(state)])
         return state_features
 
     def update(self, states, actions, rewards):
         y = self.discounted_rewards(rewards)
-        x = np.array([np.array(self.features(state)) for state in states])
+        
+        x = np.array([self.features(state) for state in states])
         self.model.fit(x, y, epochs=150, batch_size=10, verbose=0)
         _, accuracy = self.model.evaluate(x, y)
         print('Accuracy: %.2f' % (accuracy*100))
