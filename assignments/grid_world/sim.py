@@ -18,7 +18,6 @@ from dynamic_programming.DP_brain_PI import PolicyIteration
 from dynamic_programming.DP_brain_VI import ValueIteration
 
 
-
 # showRender = False
 # episodes = 2000
 # renderEveryNth = 10000
@@ -55,7 +54,7 @@ def do_algorithm(rl, task, env):
     data = {}
     env.after(10, update(env, rl, data,
                          showRender=True,
-                         episodes=2000,
+                         episodes=10000,
                          renderEveryNth=100,
                          printEveryNth=100,
                          ))
@@ -92,9 +91,10 @@ def q_learning(task):
     rl = QLearning(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
+
 def policy_gradient_learning(task):
     env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1])
-    rl = PolicyGradientLearning(list(range(env.n_actions)), 4)
+    rl = PolicyGradientLearning(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
 
@@ -118,9 +118,9 @@ def run(method, task_num):
 threads, sem = [], threading.Semaphore()
 
 for algo in algos:
-    threads.append(threading.Thread(target=algo, args=(0,)))
-    # for task_num, task in enumerate(tasks):
-    #     threads.append(threading.Thread(target=algo, args=(task_num,)))
+    # threads.append(threading.Thread(target=algo, args=(0,)))
+    for task_num, task in enumerate(tasks):
+        threads.append(threading.Thread(target=algo, args=(task_num,)))
 
 for i, thread in enumerate(threads):
     debug(1, f'Starting thread {i}')
