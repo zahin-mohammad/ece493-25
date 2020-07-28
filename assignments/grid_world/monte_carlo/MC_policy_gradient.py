@@ -19,17 +19,10 @@ class PolicyGradientLearning(MonteCarloAlgorithm):
         self.lr = learning_rate
         self.dr = discount_rate
 
-        # self.states, self.actions, self.rewards = [], [], []
-
         self.debug = debug
         self.epsilon = epsilon
 
         self.build_neural_network()
-    
-    # def store_state_action_reward(self, state, action, reward):
-    #     self.states.append(state)
-    #     self.actions.append(action)
-    #     self.rewards.append(reward)
 
     def build_neural_network(self):
         self.model = keras.Sequential()
@@ -56,31 +49,20 @@ class PolicyGradientLearning(MonteCarloAlgorithm):
     
     def choose_action(self, observation):
         features = self.features(observation)
-        print(features)
         action_probabilities = self.model.predict(features)
-        print(action_probabilities)
-        return np.random.choice(self.num_actions, p=action_probabilities.flatten())
-
-        # softmax_out = self.neural_network(np.array([observation]).reshape((1, -1)))
-
-        # selected_action = np.random.choice(len(self.actions), p=softmax_out.numpy()[0])
-        # print(selected_action)
-        # return selected_action              
+        return np.random.choice(self.num_actions, p=action_probabilities.flatten())             
 
     def learn(self, s, a, r, s_):
         return s_, self.choose_action(s)
     
     def features(self, state):
         state_features = np.array([list(literal_eval(state))])
-        print(state_features.shape)
         return state_features
 
     def update(self, states, actions, rewards):
         y = self.discounted_rewards(rewards)
         x = np.array([np.array(self.features(state)) for state in states])
-        print(x)
-        self.model.fit(x, y, epochs=150, batch_size=10)
-
+        self.model.fit(x, y, epochs=150, batch_size=10, verbose=0)
         _, accuracy = self.model.evaluate(x, y)
         print('Accuracy: %.2f' % (accuracy*100))
     
