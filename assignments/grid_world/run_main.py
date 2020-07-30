@@ -55,7 +55,7 @@ def update(env, RL, data,
             rewards.append(reward)
             # if isinstance(RL, MonteCarloAlgorithm):
             #     RL.store_state_action_reward(state, action, reward)
-            
+
             global_reward[episode] += reward
             debug(2, f'state(ep:{episode},t:{t})={state}')
             debug(
@@ -67,7 +67,7 @@ def update(env, RL, data,
             state, action = RL.learn(str(state), action, reward, str(state_))
 
             # break while loop when end of this episode
-            if done or len(rewards) > 1000:
+            if done or len(rewards) > 100:
                 if isinstance(RL, MonteCarloAlgorithm):
                     RL.update(states, actions, rewards)
                 break
