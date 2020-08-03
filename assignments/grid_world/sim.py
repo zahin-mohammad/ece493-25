@@ -92,16 +92,22 @@ def q_learning(task):
     do_algorithm(rl, task, env)
 
 
+def double_q_learning(task):
+    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1])
+    rl = DoubleQLearning(list(range(env.n_actions)))
+    do_algorithm(rl, task, env)
+
+
 def policy_gradient_learning(task):
     env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1])
     rl = PolicyGradientLearning(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
 
-# algos = [value_iteration, policy_iteration,
-#          sarsa_learning, expected_sarsa_learning, q_learning]
-
 algos = [policy_gradient_learning]
+
+# algos = [value_iteration, policy_iteration, sarsa_learning,
+#          expected_sarsa_learning, double_q_learning]
 
 
 def run(method, task_num):
