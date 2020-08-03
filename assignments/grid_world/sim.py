@@ -1,5 +1,6 @@
 import numpy as np
 import threading
+import sys
 
 from run_main import update, debug
 from maze_env import Maze
@@ -19,10 +20,10 @@ from dynamic_programming.DP_brain_VI import ValueIteration
 
 
 # showRender = False
-# episodes = 2000
+episodes = 2000
 # renderEveryNth = 10000
 # printEveryNth = 10000
-do_plot_rewards = False
+do_plot_rewards = True
 
 # Task Specifications
 
@@ -54,7 +55,7 @@ def do_algorithm(rl, task, env):
     data = {}
     env.after(10, update(env, rl, data,
                          showRender=True,
-                         episodes=10000,
+                         episodes=episodes,
                          renderEveryNth=100,
                          printEveryNth=100,
                          ))
@@ -97,6 +98,11 @@ def double_q_learning(task):
     rl = DoubleQLearning(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
+def eligibility_trace_learning(task):
+    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1])
+    rl = EligibilityTraceSarsaLearning(list(range(env.n_actions)))
+    do_algorithm(rl, task, env)
+
 
 def policy_gradient_learning(task):
     env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1])
@@ -104,10 +110,9 @@ def policy_gradient_learning(task):
     do_algorithm(rl, task, env)
 
 
-algos = [policy_gradient_learning]
+# algos = [policy_gradient_learning]
 
-# algos = [value_iteration, policy_iteration, sarsa_learning,
-#          expected_sarsa_learning, double_q_learning]
+algos = [eligibility_trace_learning, double_q_learning, policy_gradient_learning]
 
 
 def run(method, task_num):
@@ -122,11 +127,14 @@ def run(method, task_num):
 
 
 threads, sem = [], threading.Semaphore()
-
-for algo in algos:
-    # threads.append(threading.Thread(target=algo, args=(0,)))
+if len(sys.argv) > 1:
+    algo = algos[int(sys.argv[1])]
     for task_num, task in enumerate(tasks):
         threads.append(threading.Thread(target=algo, args=(task_num,)))
+else:   
+    for algo in algos:
+        for task_num, task in enumerate(tasks):
+            threads.append(threading.Thread(target=algo, args=(task_num,)))
 
 for i, thread in enumerate(threads):
     debug(1, f'Starting thread {i}')
@@ -143,6 +151,6 @@ for task_num, experiment_list in experiments.items():
 
 if(do_plot_rewards):
     # Simple plot of return for each episode and algorithm, you can make more informative plots
-    plot_rewards(experiments)
-    plot_time(experiments)
-    plot_individual_plots(experiments)
+    if len(sys.argv) > 1:
+        plot_rewards(experiments, algos[int(sys.argv[1])].__name__)
+        plot_individual_plots(experiments)

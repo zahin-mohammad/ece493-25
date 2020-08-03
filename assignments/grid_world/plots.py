@@ -4,7 +4,7 @@ import numpy as np
 PLOT_DIR = "./plots/"
 
 
-def plot_rewards(task_experiments):
+def plot_rewards(task_experiments, title=""):
     fig, axs = plt.subplots(2, 2)
     color_list = ['blue', 'green', 'red', 'black', 'magenta']
     label_list = []
@@ -23,14 +23,14 @@ def plot_rewards(task_experiments):
     fig.text(0.5, 0.04, 'Episodes', ha='center', fontsize=18)
     fig.text(0.04, 0.5, 'Rewards', va='center',
              rotation='vertical', fontsize=18)
-    fig.suptitle('DP and Learning Algorithm Episodes vs Rewards', fontsize=18)
+    fig.suptitle('Episodes vs Rewards', fontsize=18)
 
     fig.set_size_inches((8.5, 11), forward=False)
-    fig.savefig(f"{PLOT_DIR}reward_graph_by_task.png", dpi=500)
+    fig.savefig(f"{PLOT_DIR}{title}reward_graph_by_task.png", dpi=500)
     # plt.show()
 
 
-def plot_individual_plots(task_experiments):
+def plot_individual_plots(task_experiments, title=""):
     fig, axs = plt.subplots(2, 2)
     color_list = ['blue', 'green', 'red', 'black', 'magenta']
     axs_keys = {0: (0, 0), 1: (0, 1), 2: (1, 0), 3: (1, 1)}
@@ -57,10 +57,10 @@ def plot_individual_plots(task_experiments):
     fig.text(0.5, 0.04, 'Episodes', ha='center', fontsize=18)
     fig.text(0.04, 0.5, 'Rewards', va='center',
              rotation='vertical', fontsize=18)
-    fig.suptitle('DP and Learning Algorithm Episodes vs Rewards', fontsize=18)
+    fig.suptitle('Episodes vs Rewards', fontsize=18)
 
     fig.set_size_inches((8.5, 11), forward=False)
-    fig.savefig(f"{PLOT_DIR}reward_graph_by_algorithm.png", dpi=500)
+    fig.savefig(f"{PLOT_DIR}{title}reward_graph_by_algorithm.png", dpi=500)
 
 
 def plot_time(task_experiments):
