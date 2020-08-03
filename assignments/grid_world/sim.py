@@ -64,48 +64,48 @@ def do_algorithm(rl, task, env):
 
 
 def value_iteration(task):
-    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Value Iteration task {task}")
+    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Value Iteration task {task+1}")
     rl = ValueIteration(list(range(env.n_actions)), env)
     do_algorithm(rl, task, env)
 
 
 def policy_iteration(task):
-    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Policy Iteration task {task}")
+    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Policy Iteration task {task+1}")
     rl = PolicyIteration(list(range(env.n_actions)), env)
     do_algorithm(rl, task, env)
 
 
 def sarsa_learning(task):
-    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Sarsa Learning task {task}")
+    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Sarsa Learning task {task+1}")
     rl = SarsaLearning(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
 
 def expected_sarsa_learning(task):
-    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Expected Sarsa Learning task {task}")
+    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Expected Sarsa Learning task {task+1}")
     rl = ExpectedSarsaLearning(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
 
 def q_learning(task):
-    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Q Learning task {task}")
+    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Q Learning task {task+1}")
     rl = QLearning(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
 
 def double_q_learning(task):
-    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Double Q Learning task {task}")
+    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Double Q Learning task {task+1}")
     rl = DoubleQLearning(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
 def eligibility_trace_learning(task):
-    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Eligibility Trace Learning task {task}")
+    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Eligibility Trace Learning task {task+1}")
     rl = EligibilityTraceSarsaLearning(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
 
 def policy_gradient_learning(task):
-    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Policy Gradient Learning task {task}")
+    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task][1], title=f"Policy Gradient Learning task {task+1}")
     rl = PolicyGradientLearning(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
@@ -153,4 +153,3 @@ if(do_plot_rewards):
     # Simple plot of return for each episode and algorithm, you can make more informative plots
     if len(sys.argv) > 1:
         plot_rewards(experiments, algos[int(sys.argv[1])].__name__)
-        # plot_individual_plots(experiments)
