@@ -4,6 +4,7 @@ from ast import literal_eval
 import numpy as np
 from math import exp
 
+np.random.seed(10)
 
 class PolicyGradientLearning(MonteCarloAlgorithm):
     def __init__(self, actions,
@@ -50,9 +51,11 @@ class PolicyGradientLearning(MonteCarloAlgorithm):
 
     def update(self, states, actions, rewards):
         discounted_rewards = self.discounted_rewards(rewards)
-        for state, action, reward in zip(states,actions,rewards):
+        t = 0
+        for state, action, reward in zip(states,actions,discounted_rewards):
             grad_ln_pi = self.features(state, action) - sum([self.policy(b,state)*self.features(state,b) for b in range(self.num_actions)])
-            self.theta = self.theta + self.lr*reward * grad_ln_pi
+            self.theta = self.theta + self.lr*(self.dr ** t)*reward * grad_ln_pi
+            t += 1
 
     def policy(self, action, observation):
         def h(a):

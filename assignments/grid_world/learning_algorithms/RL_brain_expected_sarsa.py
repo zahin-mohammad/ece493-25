@@ -5,16 +5,14 @@ import maze_env
 
 class ExpectedSarsaLearning():
     def __init__(self, actions,
-                 learning_rate=0.01,
+                 learning_rate=0.015,
                  discount_rate=0.9,
-                 epsilon=0.1,
-                 debug=True,):
+                 epsilon=0.1):
         self.display_name = "Expected Sarsa Learning"
         self.actions = actions
         self.lr = learning_rate
         self.dr = discount_rate
         self.q = {}
-        self.debug = debug
         self.epsilon = epsilon
 
     def choose_action(self, observation):

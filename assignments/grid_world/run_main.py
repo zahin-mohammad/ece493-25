@@ -67,7 +67,9 @@ def update(env, RL, data,
             state, action = RL.learn(str(state), action, reward, str(state_))
 
             # break while loop when end of this episode
-            if done or len(rewards) > 100:
+            # if len(rewards) > 100:
+            #     break
+            if done:
                 if isinstance(RL, MonteCarloAlgorithm):
                     RL.update(states, actions, rewards)
                 break
