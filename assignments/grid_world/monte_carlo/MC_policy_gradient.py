@@ -4,8 +4,6 @@ from ast import literal_eval
 import numpy as np
 from math import exp
 
-np.random.seed(10)
-
 class PolicyGradientLearning(MonteCarloAlgorithm):
     def __init__(self, actions,
                 num_features=100,  # number of grids

@@ -19,7 +19,7 @@ def debug(debuglevel, msg, **kwargs):
             print(msg)
 
 
-def update(env, RL, data,
+def update(task_num, env, RL, data,
            sim_speed=0.001,
            showRender=False,
            renderEveryNth=1000,
@@ -66,9 +66,6 @@ def update(env, RL, data,
             # print(str(state))
             state, action = RL.learn(str(state), action, reward, str(state_))
 
-            # break while loop when end of this episode
-            # if len(rewards) > 100:
-            #     break
             if done:
                 if isinstance(RL, MonteCarloAlgorithm):
                     RL.update(states, actions, rewards)
@@ -77,10 +74,10 @@ def update(env, RL, data,
                 t = t+1
         end = time.time()
         data[RL.display_name].append(end-start)
-        debug(1, "({}) Episode {}: Length={}  Total return = {} ".format(RL.display_name, episode, t,
+        debug(1, "({}) Task: {} Episode {}: Length={}  Total return = {} ".format(RL.display_name, task_num, episode, t,
                                                                          global_reward[episode], global_reward[episode]), printNow=(episode % printEveryNth == 0))
         if(episode >= 100):
-            debug(1, "    Median100={} Variance100={}".format(np.median(global_reward[episode-100:episode]), np.var(
+            debug(1, "({}) Task: {} Median100={} Variance100={}".format(RL.display_name, task_num, np.median(global_reward[episode-100:episode]), np.var(
                 global_reward[episode-100:episode])), printNow=(episode % printEveryNth == 0))
 
     # end of game
