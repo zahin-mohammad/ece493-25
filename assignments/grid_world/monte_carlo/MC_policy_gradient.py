@@ -10,7 +10,7 @@ class PolicyGradientLearning(MonteCarloAlgorithm):
     def __init__(self, actions,
                 num_features=100,  # number of grids
                 learning_rate=0.015,
-                discount_rate=0.5,
+                discount_rate=0.99,
                 debug=True):
         self.display_name = "Policy Gradient Reinforce"
         self.num_actions = len(actions)  # actions 0-3
@@ -56,7 +56,7 @@ class PolicyGradientLearning(MonteCarloAlgorithm):
             grad_ln_pi = self.features(state, action) - sum([self.policy(b,state)*self.features(state,b) for b in range(self.num_actions)])
             self.theta = self.theta + self.lr*(self.dr ** t)*reward * grad_ln_pi
             t += 1
-        self.dr = min(1, self.dr + 0.0001)
+        # self.dr = min(1, self.dr + 0.00002)
 
     def policy(self, action, observation):
         def h(a):
