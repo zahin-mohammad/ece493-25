@@ -110,30 +110,22 @@ def policy_gradient_learning(task):
     do_algorithm(rl, task, env)
 
 
-# algos = [policy_gradient_learning]
+# algos = [expected_sarsa_learning]
 
 algos = [sarsa_learning, q_learning, expected_sarsa_learning, eligibility_trace_learning, double_q_learning, policy_gradient_learning]
 
-
-def run(method, task_num):
-    if method == 0:
-        value_iteration(task_num)
-    elif method == 1:
-        policy_iteration(task_num)
-    elif method == 2:
-        sarsa_learning(task_num)
-    else:
-        q_learning(task_num)
 
 
 threads, sem = [], threading.Semaphore()
 if len(sys.argv) > 1:
     algo = algos[int(sys.argv[1])]
     for task_num, task in enumerate(tasks):
+        print(f"running {algo.__name__} {task_num}")
         threads.append(threading.Thread(target=algo, args=(task_num,)))
 else:   
     for algo in algos:
         for task_num, task in enumerate(tasks):
+            print(f"running {algo.__name__} {task_num}")
             threads.append(threading.Thread(target=algo, args=(task_num,)))
 
 for i, thread in enumerate(threads):

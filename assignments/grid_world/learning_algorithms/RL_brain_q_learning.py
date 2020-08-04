@@ -1,6 +1,5 @@
 import numpy as np
 from ast import literal_eval
-import maze_env
 
 class QLearning():
     def __init__(self, actions, learning_rate=0.01, discount_rate=0.9, epsilon = 0.1, debug=True,):
@@ -11,16 +10,16 @@ class QLearning():
         self.q = {}
         self.debug = debug
         self.epsilon = epsilon
+ 
+    def lazy_table_init(self, observation):
+        self.q[observation] = {action:0 for action in self.actions} if observation not in self.q else self.q[observation]
 
     def choose_action(self, observation):
-        # Init Q table
-        self.q.setdefault(observation,{})
-        for action in self.actions:
-            self.q[observation].setdefault(action, 0)
-        if np.random.uniform() <= (1-self.epsilon): # Greedy
+        self.lazy_table_init(observation)
+        if np.random.uniform() >= self.epsilon: # Greedy
             return (max(self.q[observation].items(), key=lambda x: x[1]))[0]
         else: # Epsilon Greedy
-            return np.random.choice(4)
+            return np.random.choice(self.actions)
                 
 
     def learn(self, s, a, r, s_):
@@ -29,12 +28,3 @@ class QLearning():
         new_q = self.q[s_][greedy_a]
         self.q[s][a] = self.q[s][a] + self.lr*(r + self.dr*new_q - self.q[s][a])
         return s_, a_
-
-if __name__ == "__main__":
-    agentXY=[0,0]
-    goalXY=[4,4]
-
-    wall_shape = np.array([[2,2],[3,6]])
-    pits = np.array([[6,3],[1,4]])
-    env = maze_env.Maze(agentXY,goalXY,wall_shape,pits)
-    rl_algo = QLearning(list(range(env.n_actions)))
