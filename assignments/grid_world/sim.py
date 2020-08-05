@@ -9,6 +9,7 @@ from learning_algorithms.RL_brain_expected_sarsa import ExpectedSarsaLearning
 from learning_algorithms.RL_brain_eligibility_trace_sarsa import EligibilityTraceSarsaLearning
 from learning_algorithms.RL_brain_double_q_learning import DoubleQLearning
 from monte_carlo.MC_policy_gradient import PolicyGradientLearning
+from deep_rl.DRL_brain_dqn import DeepQNetwork
 from plots import *
 from maze_env import Maze
 from run_main import update, debug
@@ -19,7 +20,7 @@ import threading
 # showRender = False
 episodes = 10000
 renderEveryNth = 10000
-printEveryNth = 1000
+printEveryNth = 1
 do_plot_rewards = True
 
 # Task Specifications
@@ -115,11 +116,17 @@ def policy_gradient_learning(task):
     rl = PolicyGradientLearning(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
+def deep_q_network(task):
+    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task]
+               [1], title=f"Policy Gradient Learning task {task+1}")
+    rl = DeepQNetwork(list(range(env.n_actions)))
+    do_algorithm(rl, task, env)
 
-# algos = [expected_sarsa_learning]
 
-algos = [sarsa_learning, q_learning, expected_sarsa_learning,
-         eligibility_trace_learning, double_q_learning, policy_gradient_learning]
+algos = [deep_q_network]
+
+# algos = [sarsa_learning, q_learning, expected_sarsa_learning,
+#          eligibility_trace_learning, double_q_learning, policy_gradient_learning]
 
 
 threads, sem = [], threading.Semaphore()
@@ -130,6 +137,7 @@ if len(sys.argv) > 1:
         threads.append(threading.Thread(target=algo, args=(task_num,)))
 else:
     for algo in algos:
+        # threads.append(threading.Thread(target=algo, args=(0,)))
         for task_num, task in enumerate(tasks):
             print(f"running {algo.__name__} {task_num}")
             threads.append(threading.Thread(target=algo, args=(task_num,)))
