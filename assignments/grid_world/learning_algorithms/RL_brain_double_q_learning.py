@@ -19,32 +19,30 @@ class DoubleQLearning():
         self.epsilon = epsilon
 
     def init_q_tables(self, observation):
-        self.q1.setdefault(observation, {})
-        for action in self.actions:
-            self.q1[observation].setdefault(action, 0)
-
-        self.q2.setdefault(observation, {})
-        for action in self.actions:
-            self.q2[observation].setdefault(action, 0)
+        self.q1.setdefault(observation, [0]*len(self.actions))
+        self.q2.setdefault(observation, [0]*len(self.actions))
 
     def choose_action(self, observation):
         self.init_q_tables(observation)
         if np.random.uniform() <= (1-self.epsilon):  # Greedy
-            return (max(self.q1[observation].items(), key=lambda x: x[1]))[0]
+            q1sa = np.array(self.q1[observation])
+            q2sa = np.array(self.q2[observation])
+            items  = (q1sa + q2sa) / 2
+            return items.argmax()
         else:  # Epsilon Greedy
             return np.random.choice(4)
 
     def learn(self, s, a, r, s_):
         a_ = self.choose_action(s_)
         if np.random.uniform() <= 0.5:
-            greedy_a = (max(self.q2[s_].items(), key=lambda x: x[1]))[0]
+            greedy_a = np.array(self.q2[s_]).argmax() 
             new_q = self.q2[s_][greedy_a]
-            self.q1[s][a] = self.q1[s][a] + self.lr * \
+            self.q1[s][a] += self.lr * \
                 (r + self.dr*new_q - self.q1[s][a])
         else:
-            greedy_a = (max(self.q1[s_].items(), key=lambda x: x[1]))[0]
+            greedy_a = np.array(self.q1[s_]).argmax() 
             new_q = self.q1[s_][greedy_a]
-            self.q2[s][a] = self.q2[s][a] + self.lr * \
+            self.q2[s][a] += self.lr * \
                 (r + self.dr*new_q - self.q2[s][a])
         return s_, a_
 
