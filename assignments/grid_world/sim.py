@@ -10,6 +10,7 @@ from learning_algorithms.RL_brain_eligibility_trace_sarsa import EligibilityTrac
 from learning_algorithms.RL_brain_double_q_learning import DoubleQLearning
 from monte_carlo.MC_policy_gradient import PolicyGradientLearning
 from deep_rl.DRL_brain_dqn import DeepQNetwork
+from deep_rl.DRL_brain_double_dqn import DoubleDeepQNetwork
 from plots import *
 from maze_env import Maze
 from run_main import update, debug
@@ -17,9 +18,9 @@ import sys
 import threading
 
 
-# showRender = False
+showRender = True
 episodes = 10000
-renderEveryNth = 10000
+renderEveryNth = 10
 printEveryNth = 1
 do_plot_rewards = True
 
@@ -52,10 +53,10 @@ def append_data(task_num, env, rl, data):
 def do_algorithm(rl, task, env):
     data = {}
     env.after(10, update(task, env, rl, data,
-                         showRender=True,
+                         showRender=showRender,
                          episodes=episodes,
-                         renderEveryNth=100,
-                         printEveryNth=100,
+                         renderEveryNth=renderEveryNth,
+                         printEveryNth=printEveryNth,
                          ))
     env.mainloop()
     append_data(task, env, rl, data)
@@ -122,8 +123,14 @@ def deep_q_network(task):
     rl = DeepQNetwork(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
+def double_deep_q_network(task):
+    env = Maze(agentXY, goalXY, tasks[task][0], tasks[task]
+               [1], title=f"Policy Gradient Learning task {task+1}")
+    rl = DoubleDeepQNetwork(list(range(env.n_actions)))
+    do_algorithm(rl, task, env)
 
-algos = [deep_q_network]
+
+algos = [deep_q_network, double_deep_q_network]
 
 # algos = [sarsa_learning, q_learning, expected_sarsa_learning,
 #          eligibility_trace_learning, double_q_learning, policy_gradient_learning]
@@ -132,15 +139,16 @@ algos = [deep_q_network]
 threads, sem = [], threading.Semaphore()
 if len(sys.argv) > 1:
     algo = algos[int(sys.argv[1])]
+    # threads.append(threading.Thread(target=algo, args=(0,)))
     for task_num, task in enumerate(tasks):
         print(f"running {algo.__name__} {task_num}")
         threads.append(threading.Thread(target=algo, args=(task_num,)))
 else:
     for algo in algos:
-        # threads.append(threading.Thread(target=algo, args=(0,)))
-        for task_num, task in enumerate(tasks):
-            print(f"running {algo.__name__} {task_num}")
-            threads.append(threading.Thread(target=algo, args=(task_num,)))
+        threads.append(threading.Thread(target=algo, args=(0,)))
+        # for task_num, task in enumerate(tasks):
+        #     print(f"running {algo.__name__} {task_num}")
+        #     threads.append(threading.Thread(target=algo, args=(task_num,)))
 
 for i, thread in enumerate(threads):
     debug(1, f'Starting thread {i}')
