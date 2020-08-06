@@ -36,6 +36,7 @@ class DoubleDeepQNetwork():
         
         self.model = self.__build_model__()
         self.target_model = self.__build_model__()
+
         self.iteration_counter = 0
         self.replace_target_model = 300
         
@@ -102,11 +103,8 @@ class DoubleDeepQNetwork():
         self.model.fit(x, y, epochs=1, verbose=0)
     
     def __train_target_model__(self):
-        # can i just directly pass weights?
         if self.iteration_counter % self.replace_target_model:
             return
-        weights = self.model.get_weights()
-        self.target_model.set_weights([weights[i] for i in range(len(self.target_model.get_weights()))])        
-
+        self.target_model.set_weights(self.model.get_weights())  
 
 

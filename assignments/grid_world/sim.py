@@ -119,13 +119,13 @@ def policy_gradient_learning(task):
 
 def deep_q_network(task):
     env = Maze(agentXY, goalXY, tasks[task][0], tasks[task]
-               [1], title=f"Policy Gradient Learning task {task+1}")
+               [1], title=f"Deep Q Network task {task+1}")
     rl = DeepQNetwork(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
 def double_deep_q_network(task):
     env = Maze(agentXY, goalXY, tasks[task][0], tasks[task]
-               [1], title=f"Policy Gradient Learning task {task+1}")
+               [1], title=f"Double Deep Q Network task {task+1}")
     rl = DoubleDeepQNetwork(list(range(env.n_actions)))
     do_algorithm(rl, task, env)
 
@@ -139,10 +139,10 @@ algos = [deep_q_network, double_deep_q_network]
 threads, sem = [], threading.Semaphore()
 if len(sys.argv) > 1:
     algo = algos[int(sys.argv[1])]
-    # threads.append(threading.Thread(target=algo, args=(0,)))
-    for task_num, task in enumerate(tasks):
-        print(f"running {algo.__name__} {task_num}")
-        threads.append(threading.Thread(target=algo, args=(task_num,)))
+    threads.append(threading.Thread(target=algo, args=(0,)))
+    # for task_num, task in enumerate(tasks):
+    #     print(f"running {algo.__name__} {task_num}")
+    #     threads.append(threading.Thread(target=algo, args=(task_num,)))
 else:
     for algo in algos:
         threads.append(threading.Thread(target=algo, args=(0,)))

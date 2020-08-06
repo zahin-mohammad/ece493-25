@@ -18,14 +18,14 @@ class DeepQNetwork():
         learning_rate=0.01, 
         discount_rate=0.9,
         epsilon_initial = 1.0,
-        epsilon_min = 0.1, 
+        epsilon_min = 0.001, 
         epsilon_decay = 0.9999):
 
         self.actions = actions
         self.num_features = num_features
         self.batch_size = batch_size
-        self.memory_capacity = memory_capacity
-        self.memory = collections.deque() 
+        self.memory = collections.deque(maxlen=memory_capacity) 
+        self.training_threshold = memory_capacity//50
 
         self.lr = learning_rate
         self.dr = discount_rate
@@ -36,6 +36,8 @@ class DeepQNetwork():
         
         self.model = self.__build_model__()
         self.target_model = self.__build_model__()
+        self.target_model.set_weights(self.model.get_weights())
+
         self.iteration_counter = 0
         self.replace_target_model = 300
         
@@ -46,17 +48,16 @@ class DeepQNetwork():
         s = self.__get_features__(observation)
         if np.random.uniform() <= self.epsilon:
             return np.random.choice(self.actions)
-        return np.argmax(self.model.predict(s)[0])
+        return np.argmax(self.model.predict(s.reshape(len(self.actions),1).T)[0])
                 
 
     def learn(self, observation_s, a, r, observation_s_):
         self.__remember__(observation_s,a,r,observation_s_)
-        self.__train_model__()
+        self.__train_model__(observation_s_)
         self.__train_target_model__()
         a_ = self.choose_action(observation_s_)
         
         self.epsilon = max(self.epsilon*self.epsilon_decay, self.epsilon_min)
-        print(self.epsilon)
         self.iteration_counter += 1
         return observation_s_, a_
 
@@ -75,36 +76,47 @@ class DeepQNetwork():
     def __remember__(self, observation_s, a, r, observation_s_):
         isDone = observation_s_ == 'terminal'
         s, s_ = self.__get_features__(observation_s), self.__get_features__(observation_s_)
-        
         self.memory.append([s,a,r,s_, isDone])
-        if len(self.memory) > self.memory_capacity:
-            self.memory.popleft()
+
 
 
     def __get_features__(self, observation):   
-        return np.array([literal_eval(observation)])
+        return np.array(literal_eval(observation))
 
-    def __train_model__(self):
-        if len(self.memory) < self.batch_size: 
+    def __train_model__(self, observation_s_):
+        if len(self.memory) < max(self.training_threshold, self.batch_size): 
             return
         samples = random.sample(self.memory, self.batch_size)
+
+        curr_states = np.array([sample[0] for sample in samples])
+        curr_qs = self.model.predict(curr_states)
+        
+        new_curr_states = np.array([sample[3] for sample in samples])
+        new_curr_qs = self.target_model.predict(new_curr_states)
+
         x = []
         y = []
-        for s, a, r, s_, isDone in samples:
-            target = self.target_model.predict(s)
-            target[0][a] = r if isDone else (r + self.dr*max(self.target_model.predict(s_)[0]))
+
+        for index, (s, a, r, s_, isDone) in enumerate(samples):
+            new_q = r if isDone else (r + self.dr*np.max(new_curr_qs[index]))
+            curr_q = curr_qs[index]
+            curr_q[a] = new_q
+            
             x.append(s)
-            y.append(target[0])
-        x = np.vstack(x)
-        y = np.array(y)
-        self.model.fit(x, y, epochs=1, verbose=0)
+            y.append(curr_q)
+
+        self.model.fit(
+            np.array(x), 
+            np.array(y), 
+            batch_size=self.batch_size, 
+            verbose=0,
+            shuffle=False,
+            ) 
     
     def __train_target_model__(self):
-        # can i just directly pass weights?
         if self.iteration_counter % self.replace_target_model:
             return
-        weights = self.model.get_weights()
-        self.target_model.set_weights([weights[i] for i in range(len(self.target_model.get_weights()))])        
+        self.target_model.set_weights(self.model.get_weights())        
 
 
 
