@@ -41,7 +41,7 @@ class DeepQNetwork():
         self.iteration_counter = 0
         self.replace_target_model = 300
         
-        self.display_name="Double Deep Q Network"
+        self.display_name="Deep Q Network"
 
 
     def choose_action(self, observation):
@@ -58,6 +58,8 @@ class DeepQNetwork():
         a_ = self.choose_action(observation_s_)
         
         self.epsilon = max(self.epsilon*self.epsilon_decay, self.epsilon_min)
+        if not (self.iteration_counter % 2000):
+            self.epsilon = min(self.epsilon*2, 1.0)
         self.iteration_counter += 1
         return observation_s_, a_
 
@@ -92,7 +94,7 @@ class DeepQNetwork():
         curr_qs = self.model.predict(curr_states)
         
         new_curr_states = np.array([sample[3] for sample in samples])
-        new_curr_qs = self.target_model.predict(new_curr_states)
+        new_curr_qs = self.model.predict(new_curr_states)
 
         x = []
         y = []
@@ -117,6 +119,8 @@ class DeepQNetwork():
         if self.iteration_counter % self.replace_target_model:
             return
         self.target_model.set_weights(self.model.get_weights())        
+      
+
 
 
 

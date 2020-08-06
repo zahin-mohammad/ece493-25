@@ -19,7 +19,7 @@ import threading
 
 
 showRender = True
-episodes = 10000
+episodes = 5000
 renderEveryNth = 10
 printEveryNth = 1
 do_plot_rewards = True
@@ -139,16 +139,16 @@ algos = [deep_q_network, double_deep_q_network]
 threads, sem = [], threading.Semaphore()
 if len(sys.argv) > 1:
     algo = algos[int(sys.argv[1])]
-    threads.append(threading.Thread(target=algo, args=(0,)))
-    # for task_num, task in enumerate(tasks):
-    #     print(f"running {algo.__name__} {task_num}")
-    #     threads.append(threading.Thread(target=algo, args=(task_num,)))
+    # threads.append(threading.Thread(target=algo, args=(0,)))
+    for task_num, task in enumerate(tasks):
+        print(f"running {algo.__name__} {task_num}")
+        threads.append(threading.Thread(target=algo, args=(task_num,)))
 else:
     for algo in algos:
-        threads.append(threading.Thread(target=algo, args=(0,)))
-        # for task_num, task in enumerate(tasks):
-        #     print(f"running {algo.__name__} {task_num}")
-        #     threads.append(threading.Thread(target=algo, args=(task_num,)))
+        # threads.append(threading.Thread(target=algo, args=(0,)))
+        for task_num, task in enumerate(tasks):
+            print(f"running {algo.__name__} {task_num}")
+            threads.append(threading.Thread(target=algo, args=(task_num,)))
 
 for i, thread in enumerate(threads):
     debug(1, f'Starting thread {i}')

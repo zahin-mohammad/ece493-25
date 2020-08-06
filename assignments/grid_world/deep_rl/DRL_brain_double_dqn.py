@@ -14,8 +14,8 @@ class DoubleDeepQNetwork():
     def __init__(self, actions,
         num_features = 4, # x1 y1 x2 y2
         batch_size = 32,
-        memory_capacity = 500,
-        learning_rate=0.01, 
+        memory_capacity = 2000,
+        learning_rate=0.001, 
         discount_rate=0.9,
         epsilon_initial = 1.0,
         epsilon_min = 0.001, 
@@ -25,7 +25,7 @@ class DoubleDeepQNetwork():
         self.num_features = num_features
         self.batch_size = batch_size
         self.memory = collections.deque(maxlen=memory_capacity) 
-        self.training_threshold = memory_capacity//50
+        self.training_threshold = 1000
 
         self.lr = learning_rate
         self.dr = discount_rate
@@ -58,13 +58,14 @@ class DoubleDeepQNetwork():
         a_ = self.choose_action(observation_s_)
         
         self.epsilon = max(self.epsilon*self.epsilon_decay, self.epsilon_min)
+        # if not (self.iteration_counter % 2000):
+        #     self.epsilon = min(self.epsilon*2, 1.0)
         self.iteration_counter += 1
         return observation_s_, a_
 
     def __build_model__(self):
         model = Sequential()
-        model.add(Dense(24, input_dim=self.num_features, 
-            activation="relu"))
+        model.add(Dense(20, input_dim=self.num_features, activation="relu"))
         model.add(Dense(48, activation="relu"))
         model.add(Dense(24, activation="relu"))
         model.add(Dense(len(self.actions)))
@@ -94,12 +95,10 @@ class DoubleDeepQNetwork():
         new_curr_states = np.array([sample[3] for sample in samples])
         new_curr_qs = self.target_model.predict(new_curr_states)
 
-        x = []
-        y = []
+        x, y = [], []
 
         for index, (s, a, r, s_, isDone) in enumerate(samples):
-            # a_max  = np.argmax(new_curr_qs[index])
-            new_q = r if isDone else (r + self.dr*new_curr_qs[index][np.argmax(new_curr_qs[index])])
+            new_q = r if isDone else (r + self.dr*max(new_curr_qs[index]))
             curr_q = curr_qs[index]
             curr_q[a] = new_q
             
