@@ -39,6 +39,7 @@ def run(isDouble, task):
     while len(env.get_episode_rewards()) < episodes:
         model.learn(total_timesteps=time_steps)
     env.save_csv()
+    env.destroy()
 
 isDouble = [True, False]
 threads = []

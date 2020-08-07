@@ -95,6 +95,10 @@ class CustomGym(Env):
             csvWriter = csv.writer(my_csv,delimiter=',')
             for med in self.median:
                 csvWriter.writerow([med])
+    
+    def destroy(self):
+        self.env.destroy()
+
    
 
 
