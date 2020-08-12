@@ -163,7 +163,6 @@ for task_num, experiment_list in experiments.items():
         print("Task {}, {} : max reward = {} medLast100={} varLast100={}".format(task_num, RL.display_name, np.max(
             data['global_reward']), np.median(data['global_reward'][-100:]), np.var(data['global_reward'][-100:])))
 
-if(do_plot_rewards):
+if do_plot_rewards and len(sys.argv) > 1:
     # Simple plot of return for each episode and algorithm, you can make more informative plots
-    if len(sys.argv) > 1:
-        plot_rewards(experiments, algos[int(sys.argv[1])].__name__)
+    plot_rewards(experiments, algos[int(sys.argv[1])].__name__)

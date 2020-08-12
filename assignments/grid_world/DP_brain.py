@@ -5,7 +5,7 @@ import maze_env
 class DynamicProgrammingAlgorithm:
     @staticmethod
     def get_tkInter_coords(center_cords):
-        return (center_cords[0]-15, center_cords[1]-15, center_cords[0]+15, center_cords[1]+15)
+        return center_cords[0] - 15, center_cords[1] - 15, center_cords[0] + 15, center_cords[1] + 15
 
     def __init__(self, actions, environment):
         self.actions = actions

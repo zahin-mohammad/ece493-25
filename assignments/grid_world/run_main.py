@@ -1,11 +1,7 @@
-import numpy as np
-import sys
-import matplotlib.pyplot as plt
-import pickle
 import time
-from MC_brain import MonteCarloAlgorithm
+import numpy as np
 
-from maze_env import Maze
+from MC_brain import MonteCarloAlgorithm
 
 DEBUG = 1
 
@@ -44,7 +40,7 @@ def update(task_num, env, RL, data,
 
         while True:
             # fresh env
-            if(showRender or (episode % renderEveryNth) == 0):
+            if showRender or (episode % renderEveryNth) == 0:
                 env.render(sim_speed)
 
             # RL take action and get next state and reward
@@ -76,7 +72,7 @@ def update(task_num, env, RL, data,
         data[RL.display_name].append(end-start)
         debug(1, "({}) Task: {} Episode {}: Length={}  Total return = {} ".format(RL.display_name, task_num, episode, t,
                                                                          global_reward[episode], global_reward[episode]), printNow=(episode % printEveryNth == 0))
-        if(episode >= 100):
+        if episode >= 100:
             debug(1, "({}) Task: {} Median100={} Variance100={}".format(RL.display_name, task_num, np.median(global_reward[episode-100:episode]), np.var(
                 global_reward[episode-100:episode])), printNow=(episode % printEveryNth == 0))
 
